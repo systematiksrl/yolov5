@@ -1,3 +1,35 @@
+# Yolov5: leather defect recognitor
+
+## Description
+Applicazione per la rilevazione e la classificazione di difetti su tagli di pelle industriale a fine processo, al fine di velocizzare il controllo qualita' attraverso segnalistica istantanea.
+
+## How to run
+1. `python3 plc_sender.py` <br> server socket che simula PLC per l'invio dei messaggi contenenti  <br> **[ id pezzo ,info ]**
+
+2. `python3 server.py` <br>
+riceve messaggi da plc.py e li scrive in un file
+una riga per ogni messaggio in modalita' append
+
+3. `python3 detect.py` <br>
+se e' arrivato un nuovo messaggio (per fare una foto) da PLC, allora
+manda il risultato della detection tramite socket  <br> **[ id pezzo , tipo di difetto, numero di difetti presenti]**
+
+4. `python3 plc_server.py` <br>
+server socket che simula PLC per l'arrivo dei messaggi da detect.py 
+
+## Installation
+#### Linux
+1. Installa l'ambiente virtuale  <br> `python3 -m venv venv`
+2. Attiva l'ambiente virtuale <br> `source venv/bin/activate`
+3. Installa le librerie di terze parti <br> `pip install -r requirements.txt`
+
+#### Windows
+
+1. Installa l'ambiente virtuale <br> `python3.10.exe -m venv venv`
+2. Attiva l'ambiente virtuale <br> `.\venv\Scripts\activate`
+3. Installa le librerie di terze parti <br> `python3.10.exe -m pip install -r .\requirements.txt`
+
+
 <div align="center">
 
   Hi, I'm [Glenn Jocher](https://www.linkedin.com/in/glenn-jocher/), author of [YOLOv5](https://github.com/ultralytics/yolov5) 🚀.
