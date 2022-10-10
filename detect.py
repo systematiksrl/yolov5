@@ -94,6 +94,8 @@ def save_image(image, id, directory = 'images' , ext = '.png'):
 
     if is_written:
         print('foto scattata: ' + image_path+'\n')
+    
+    return image_path, counter
 
 @torch.no_grad()
 def run(
@@ -254,8 +256,8 @@ def run(
                         vid_writer[i] = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer[i].write(im0)
 
+            # Search PLC data message
             plc_data = get_plc_message( directory = FILEPATH_PLC_MESSAGES )
-
             if plc_data:
                 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                     sock.connect((PLC_IP, PLC_PORT))
@@ -265,8 +267,15 @@ def run(
                 id_pezzo = plc_data.split(',')[1]
                 print(plc_data)
                 print('Difetti trovati -> ',s)
-                save_image(im0, id_pezzo, directory = FILEDIRECTORY_IMAGES, ext = '.png')
+                path_file, id_frammento = save_image(im0, id_pezzo, directory = FILEDIRECTORY_IMAGES, ext = '.png')
                 plc_data = ''
+            
+            # POST request 
+            url = 'https://127.0.0.1'
+            path_file_immagine = path_file
+            myobj = {'path': path_file,'id': id_pezzo,'id_frammento'}
+            requests.post(url, json = myobj)
+
                 
         # Print time (inference-only)
         LOGGER.info(f'{s} {t3 - t2:.3f}s')
