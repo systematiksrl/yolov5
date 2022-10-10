@@ -270,12 +270,15 @@ def run(
                 path_file, id_frammento = save_image(im0, id_pezzo, directory = FILEDIRECTORY_IMAGES, ext = '.png')
                 plc_data = ''
             
-            # POST request 
+            # POST request original
             url = 'https://127.0.0.1'
-            path_file_immagine = path_file
-            myobj = {'path': path_file,'id': id_pezzo,'id_frammento'}
+            myobj = {'path': path_file,'id': id_pezzo,'id_frammento':id_frammento}
             requests.post(url, json = myobj)
 
+            # POST request original
+            difects = s
+            myobj = {'path': path_file,'id': id_pezzo,'id_frammento':id_frammento,'difetti':difects}
+            requests.post(url, json = myobj)
                 
         # Print time (inference-only)
         LOGGER.info(f'{s} {t3 - t2:.3f}s')
