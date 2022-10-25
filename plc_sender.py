@@ -5,7 +5,7 @@ import random as rnd
 from sys import platform
 from datetime import datetime
 from colorama import Fore, Style
-from app_config import SERVER_IP, SERVER_PORT, PLC_IP, PLC_PORT
+from app_config import SERVER_IP, SERVER_PORT
 
 '''
 SIMULATORE socket di PLC

@@ -1,0 +1,17 @@
+f,1,132,3 
+f,2,132,3 
+f,3,132,3 4 foro, 5 goccia
+f,4,132,3 4 foro, 5 goccia
+f,5,132,3 
+f,6,132,3 4 foro, 5 goccia
+f,7,132,3 
+f,8,132,3 4 foro, 5 goccia
+f,123,132,3 4 foro, 5 goccia
+f,1,132,3 
+f,2,132,3 
+f,3,132,3 4 foro, 5 goccia
+f,4,132,3 4 foro, 5 goccia
+f,5,132,3 
+f,6,132,3 4 foro, 5 goccia
+f,7,132,3 
+f,8,132,3 4 foro, 5 goccia
