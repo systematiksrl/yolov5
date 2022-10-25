@@ -26,17 +26,17 @@ Applicazione per la rilevazione e la classificazione di difetti su tagli di pell
 
 ## Descrizione componenti
 
-1. `python3 plc_sender.py` <br> server socket che simula PLC per l'invio dei messaggi contenenti  <br> **[ id pezzo ,info ]**
+1. `plc_sender.py` <br> server socket che simula PLC per l'invio dei messaggi contenenti  <br> **[ id pezzo ,info ]**
 
-2. `python3 server.py` <br>
+2. `server.py` <br>
 riceve messaggi da plc.py e li scrive in un file
 una riga per ogni messaggio in modalita' append
 
-3. `python3 detect.py` <br>
+3. `detect.py` <br>
 se e' arrivato un nuovo messaggio (per fare una foto) da PLC, allora
 manda il risultato della detection tramite socket  <br> **[ id pezzo , tipo di difetto, numero di difetti presenti]**
 
-4. `python3 plc_server.py` <br>
+4. `plc_server.py` <br>
 server socket che simula PLC per l'arrivo dei messaggi da detect.py 
 
 ##########################
