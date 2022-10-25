@@ -18,10 +18,10 @@ Applicazione per la rilevazione e la classificazione di difetti su tagli di pell
 
 ## How to run
 
-1. python3.10.exe <br> `.\plc_sender.py`
-2. python3.10.exe <br> `.\server.py`
-3. python3.10.exe <br> `.\detect.py --weights .\best.pt --source 0`
-4. python3.10.exe <br> `.\plc_reciver.py`
+1. `python3.10.exe .\plc_sender.py`
+2. `python3.10.exe .\server.py`
+3. `python3.10.exe .\detect.py --weights .\best.pt --source 0`
+4. `python3.10.exe .\plc_reciver.py`
 
 
 ## Descrizione componenti
