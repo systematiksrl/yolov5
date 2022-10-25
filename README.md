@@ -16,12 +16,15 @@ Applicazione per la rilevazione e la classificazione di difetti su tagli di pell
 3. Installa le librerie di terze parti <br> `python3.10.exe -m pip install -r .\requirements.txt`
 
 
-## How to run 
+## How to run
 
-python3.10.exe .\plc_sender.py
-python3.10.exe .\server.py
-python3.10.exe .\detect.py
-python3.10.exe .\plc_reciver.py
+1. python3.10.exe .\plc_sender.py
+2. python3.10.exe .\server.py
+3. python3.10.exe .\detect.py --weights .\best.pt --source 0
+4. python3.10.exe .\plc_reciver.py
+
+
+
 
 1. `python3 plc_sender.py` <br> server socket che simula PLC per l'invio dei messaggi contenenti  <br> **[ id pezzo ,info ]**
 

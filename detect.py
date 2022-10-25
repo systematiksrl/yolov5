@@ -264,6 +264,7 @@ def run(
 
             # Search PLC data message
             plc_data = get_plc_message( directory = FILEPATH_PLC_MESSAGES )
+
             if plc_data:
                 try:
                     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -275,8 +276,9 @@ def run(
                     print('PLC Connection refused')
 
                 ID_PIECE = plc_data.split(',')[1]
+
                 print(plc_data)
-                print('Difetti trovati -> ',s)
+                print('Difetti trovati -> ', s)
 
                 # save the processed images
                 FILEPATH_ORIGINAL, FRAGMENT_ID = save_image(im_save, ID_PIECE, directory = DIRECTORY_ORIGINAL_IMAGES, ext = '.png')
