@@ -1,31 +1,27 @@
+import os
+import socket
 import time
-import socketserver
+import random as rnd
+from sys import platform
 from datetime import datetime
-import tkinter as tk
+from colorama import Fore, Style
+from app_config import PLC_IP, PLC_PORT
 
-class MyTCPHandler(socketserver.BaseRequestHandler):
-    """
-    The request handler class for our server.
-    It is instantiated once per connection to the server, and must
-    override the handle() method to implement communication to the
-    client.
-    """
+'''
+SIMULATORE socket di PLC
+socket ad utilizzo di test come sostituto al PLC.    
+'''
 
-    def handle(self):
-        self.data = self.request.recv(1024).strip() # self.request is the TCP socket connected
-        print(f"\nIP connesso   -> {self.client_address[0]}")
-        print(f"dati ricevuti -> {self.data}")
-        print(datetime.now())
-
-if __name__ == "__main__":
-
-    HOST, PORT = "localhost", 8081
-    print(f'\nPLC server online {HOST}:{PORT}\n')
-    with socketserver.TCPServer((HOST, PORT), MyTCPHandler) as server:
-        # interrupt the program with Ctrl-C
-        server.serve_forever()
-
-
-
-      
-
+import socket
+serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serv.bind((PLC_IP, PLC_PORT))
+serv.listen(1)
+while True:
+    conn, addr = serv.accept()
+    from_client = ''
+    data_from_client = conn.recv(4096)
+    if str(data_from_client) not in [str(b''),"b''",None,False]:
+        print(f"data received: {data_from_client}")
+    
+    conn.close()
+    

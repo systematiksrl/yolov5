@@ -11,7 +11,7 @@ from app_config import SERVER_IP, SERVER_PORT, PLC_IP, PLC_PORT
 SIMULATORE socket di PLC
 socket ad utilizzo di test come sostituto al PLC.    
 '''
- 
+
 def testing_socket():
 
     while True: 
@@ -22,7 +22,7 @@ def testing_socket():
                 
         # inizializza il socket con IPv4 e straming socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.bind((PLC_IP, PLC_PORT))
+        # sock.bind((PLC_IP, PLC_PORT))
         sock.connect((SERVER_IP, SERVER_PORT))
         sock.send(MESSAGE)
         sock.close()

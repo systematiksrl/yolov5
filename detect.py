@@ -29,6 +29,7 @@ import os
 import platform
 import sys
 from pathlib import Path
+import requests
 
 import torch
 import torch.backends.cudnn as cudnn
@@ -51,7 +52,11 @@ import numpy
 import socket
 import sys
 
-from app_config import FILEDIRECTORY_IMAGES, FILEPATH_PLC_MESSAGES, HOST, PLC_IP, PLC_PORT, PORT, div
+from app_config import DIRECTORY_ORIGINAL_IMAGES,DIRECTORY_PROCESSED_IMAGES, FILEPATH_PLC_MESSAGES 
+from app_config import PLC_IP, PLC_PORT
+from app_config import div
+from app_config import URL_INTERFACE
+
 
 def get_plc_message(directory = 'messages.txt'):
     '''
@@ -200,6 +205,7 @@ def run(
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
             annotator = Annotator(im0, line_width=line_thickness, example=str(names))
+            im_save = im0.copy()
             
             s=''
             if len(det):
@@ -259,29 +265,37 @@ def run(
             # Search PLC data message
             plc_data = get_plc_message( directory = FILEPATH_PLC_MESSAGES )
             if plc_data:
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                    sock.connect((PLC_IP, PLC_PORT))
-                    defects = s.split(':')[-1]
-                    sock.send(bytes( plc_data + '|' + defects, "utf-8"))
-                
-                id_pezzo = plc_data.split(',')[1]
+                try:
+                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                        sock.connect((PLC_IP, PLC_PORT))
+                        defects = s.split(':')[-1]
+                        sock.send(bytes( plc_data + ' - ' + defects, "utf-8"))
+
+                except ConnectionRefusedError:
+                    print('PLC Connection refused')
+
+                ID_PIECE = plc_data.split(',')[1]
                 print(plc_data)
                 print('Difetti trovati -> ',s)
-                path_file, id_frammento = save_image(im0, id_pezzo, directory = FILEDIRECTORY_IMAGES, ext = '.png')
+
+                # save the processed images
+                FILEPATH_ORIGINAL, FRAGMENT_ID = save_image(im_save, ID_PIECE, directory = DIRECTORY_ORIGINAL_IMAGES, ext = '.png')
+                
+                # POST original images
+                #original_image_data = {'filepath': FILEPATH_ORIGINAL,'piece_id': ID_PIECE,'fragment_id':FRAGMENT_ID}
+                #requests.post(URL_INTERFACE, json = original_image_data)         
+                FILEPATH_PROCESSED, FRAGMENT_ID = save_image(im0, ID_PIECE, directory = DIRECTORY_PROCESSED_IMAGES, ext = '.png')
+                
+                # POST processed images
+                #DIFECTS_FOUND = s
+                #processed_image_data = {'filepath': FILEPATH_PROCESSED,'piece_id': id_pezzo,'fragment_id':FRAGMENT_ID,'defects':DIFECTS_FOUND}
+                #requests.post(URL_INTERFACE, json = processed_image_data)
+
+                # reset plc_data
                 plc_data = ''
             
-            # POST request original
-            url = 'https://127.0.0.1'
-            myobj = {'path': path_file,'id': id_pezzo,'id_frammento':id_frammento}
-            requests.post(url, json = myobj)
-
-            # POST request original
-            difects = s
-            myobj = {'path': path_file,'id': id_pezzo,'id_frammento':id_frammento,'difetti':difects}
-            requests.post(url, json = myobj)
-                
         # Print time (inference-only)
-        LOGGER.info(f'{s} {t3 - t2:.3f}s')
+        # LOGGER.info(f' {t3 - t2:.3f}s  difetti {s}')
 
     # Print results
     t = tuple(x / seen * 1E3 for x in dt)  # speeds per image
@@ -292,13 +306,11 @@ def run(
     if update:
         strip_optimizer(weights[0])  # update model (to fix SourceChangeWarning)
 
-
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--id_pezzo', nargs='+', type=str, default='1', help='id del pezzo di produzione')
+    parser.add_argument('--id_pezzo', nargs='+', type=str, default='1', help='testa la ID del pezzo correttamente dandogliela a linea di comando')
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'yolov5s.pt', help='model path(s)')
-    parser.add_argument('--source', type=str, default=ROOT / 'data/images', help='file/dir/URL/glob, 0 for webcam')
-    parser.add_argument('--data', type=str, default=ROOT / 'data/coco128.yaml', help='(optional) dataset.yaml path')
+    parser.add_argument('--source', type=str, default=ROOT / 'data/images', help='file/ help=(optional) dataset.yaml path')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
