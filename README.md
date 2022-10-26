@@ -1,45 +1,157 @@
 # Yolov5: leather defect recognitor
 
-## Description
-Applicazione per la rilevazione e la classificazione di difetti su tagli di pelle industriale a fine processo, al fine di velocizzare il controllo qualita' attraverso segnalistica istantanea.
+## **Description**
+Application for the detection and classification of defects on industrial leather cuts at the end of the process, in order to speed up quality control through instant signaling.
 
-## Installation
-#### Linux
-1. Installa l'ambiente virtuale  <br> `python3 -m venv venv`
-2. Attiva l'ambiente virtuale <br> `source venv/bin/activate`
-3. Installa le librerie di terze parti <br> `pip install -r requirements.txt`
+<br>
 
-#### Windows
+## **Installation**
+#### **LINUX**
+1. Install the virtual environment  <br> `python3 -m venv venv`
+2. Activate the virtual environment <br> `source venv/bin/activate`
+3. Install third party libraries <br> `pip install -r requirements.txt`
 
-1. Installa l'ambiente virtuale <br> `python3.10.exe -m venv venv`
-2. Attiva l'ambiente virtuale <br> `.\venv\Scripts\activate`
-3. Installa le librerie di terze parti <br> `python3.10.exe -m pip install -r .\requirements.txt`
+#### **WINDOWS**
 
+1. Install the virtual environment <br> `python3.10.exe -m venv venv`
+2. Activate the virtual environment <br> `.\venv\Scripts\activate`
+3. Install third party libraries <br> `python3.10.exe -m pip install -r .\requirements.txt`
 
-## How to run
+<br>
+
+## **How to run**
 
 1. `python3.10.exe .\plc_sender.py`
 2. `python3.10.exe .\server.py`
 3. `python3.10.exe .\detect.py --weights .\best.pt --source 0`
 4. `python3.10.exe .\plc_reciver.py`
 
+<br>
 
-## Descrizione componenti
+## **Component description**
 
-1. `plc_sender.py` <br> server socket che simula PLC per l'invio dei messaggi contenenti  <br> **[ id pezzo ,info ]**
+1. `plc_sender.py` <br> Socket server that simulates PLC for sending messages containing  <br> 
+
+    - piece_id 
+    - info
 
 2. `server.py` <br>
-riceve messaggi da plc.py e li scrive in un file
-una riga per ogni messaggio in modalita' append
+Receives messages from plc.py and writes them to a file
+one line for each message in append FIFO mode.
 
 3. `detect.py` <br>
-se e' arrivato un nuovo messaggio (per fare una foto) da PLC, allora
-manda il risultato della detection tramite socket  <br> **[ id pezzo , tipo di difetto, numero di difetti presenti]**
+If a new message has arrived (to take a picture) from PLC, then
+send the detection result via socket <br> 
+
+    - piece_id 
+    - difect_type
+    - n_difects_founded
 
 4. `plc_server.py` <br>
-server socket che simula PLC per l'arrivo dei messaggi da detect.py 
+Socket server that simulates PLC for the arrival of messages from detect.py
 
-##########################
+
+<br>
+
+
+
+##  **Train yolo neural networks on custom datasets**
+Yolo neural network model for custom training
+    
+1. annotate the new images
+
+2. put all images and annotations on / data / obj /
+
+3. use split_data.py to split them
+
+
+4. Create or edit the file:
+`yolov5/data/dataset.yaml`
+
+
+``` t
+
+train: /googledrive/yolov5/data/images/training/
+val: /googledrive/yolov5/data/images/validation/
+
+# number of classes
+nc: 2
+
+# class names
+names: ['foro','goccia']
+
+```
+
+5. Training the neural network.
+
+`python3 train.py --img 640 --batch 16 --epochs 5 --data data/dataset.yaml --weights best.pt`
+
+
+```bash
+python train.py --data dataset.yaml --cfg yolov5n.yaml --weights '' --batch-size 128
+                                       yolov5s                                64
+                                       yolov5m                                40
+                                       yolov5l                                24
+                                       yolov5x                                16
+```
+
+
+6. Save the .pt neural network file model and use it for detection purposes-
+
+`python detect.py --weights best.pt --img 640 --conf 0.4 --source 0`
+    
+
+```bash
+python detect.py --source 0  # webcam
+                          img.jpg  # image
+                          vid.mp4  # video
+                          path/  # directory
+                          path/*.jpg  # glob
+                          'https://youtu.be/Zgi9g1ksQHc'  # YouTube
+                          'rtsp://example.com/media.mp4'  # RTSP, RTMP, HTTP stream
+```
+
+<br>
+
+
+## **Image annotation Yolov5 label format**
+
+label format
+`<object-class> <x> <y> <width> <height>`
+
+label example
+`4 0.494545 0.521858 0.770909 0.551913`
+
+- 4 is class_id
+- 0.521858 is the y-axis value
+- 0.770909 is the width of an object
+- 0.551913 is the height of an object.
+
+<br>
+
+## **Project folder structure**
+
+Main Folder
+
+    --- data/
+        --- dataset_name/
+            --- images/
+                --- img1.jpg
+                --- img2.jpg
+                ..........
+
+            --- labels/
+                --- img1.txt
+                --- img2.txt
+                ..........
+
+            --- train.txt
+            --- val.txt
+
+
+<br>
+------------------------------------------
+
 
 <div align="center">
 

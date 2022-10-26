@@ -7,20 +7,18 @@ from datetime import datetime
 from colorama import Fore, Style
 from app_config import SERVER_IP, SERVER_PORT
 
-'''
-SIMULATORE socket di PLC
-socket ad utilizzo di test come sostituto al PLC.    
-'''
 
-def testing_socket():
-
+def PLC_sender():
+    '''
+    PLC socket simulator socket for test use as a substitute for the PLC.
+    '''
     while True: 
         
-        # messaggio randomico per simulare il messaggio PLC
+        # random message to simulate the PLC message
         MESSAGE = bytes('f,'+str(rnd.randint(100,999))+','+str(rnd.randint(1,100))+',' +str(rnd.randint(1,100)),'utf-8') 
         current_time = datetime.now().strftime("%H:%M:%S")
                 
-        # inizializza il socket con IPv4 e straming socket
+        # initialize the socket with IPv4 and straming socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         # sock.bind((PLC_IP, PLC_PORT))
         sock.connect((SERVER_IP, SERVER_PORT))
@@ -38,6 +36,6 @@ def testing_socket():
         time.sleep( 5 )
 
 if __name__ == "__main__":
-    testing_socket()
+    PLC_sender()
  
     

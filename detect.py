@@ -60,11 +60,11 @@ from app_config import URL_INTERFACE
 
 def get_plc_message(directory = 'messages.txt'):
     '''
-    legge i messaggi scritti da server.py
-    che legge i messaggi da PLC e li salva.
-    questa funzione legge il file, se presente dei dati,
-    prende la prima riga (regola First In First Out)
-    e lo restituisce al fine di salvare la id del pezzo.
+    read messages written by server.py
+    which reads the messages from the PLC and saves them.
+    this function reads the file, if any data is present,
+    takes the first line (First In First Out rule)
+    and returns it in order to save the id of the piece.
     '''
     with open(directory, '+r') as f:
         first_line = f.readline()
@@ -78,11 +78,11 @@ def get_plc_message(directory = 'messages.txt'):
 
 def save_image(image, id, directory = 'images' , ext = '.png'):
     '''
-    1. se non presente la directory dove salvare le immagini le crea
-    2. se gia presente un immagine con quel nome (e.g. img0_4.png  id pezzo_numero duplicato)
-       aggiunge uno ad numero duplicato (counter) finche' non crea un filepath non presente.
-    3. salva l' immagine nel file path
-    4. conferma che la foto sia stata salvata mostrandomi il path
+     1. if the directory where to save the images is not present, it creates them
+     2. if there is already an image with that name (e.g. img0_4.png piece id_ duplicate number)
+        add one to duplicate number (counter) until it creates a filepath that is not present.
+     3. save the image in the file path
+     4. confirm that the photo has been saved by showing me the path
     '''
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -98,14 +98,13 @@ def save_image(image, id, directory = 'images' , ext = '.png'):
     is_written = cv2.imwrite(image_path, image)
 
     if is_written:
-        print('foto scattata: ' + image_path+'\n')
+        print('New image: ' + image_path+'\n')
     
     return image_path, counter
 
 @torch.no_grad()
 def run(
         weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
-        id_pezzo = '1',
         source=ROOT / 'data/images',  # file/dir/URL/glob, 0 for webcam
         data=ROOT / 'data/coco128.yaml',  # dataset.yaml path
         imgsz=(640, 640),  # inference size (height, width)
@@ -273,25 +272,26 @@ def run(
                         sock.send(bytes( plc_data + ' - ' + defects, "utf-8"))
 
                 except ConnectionRefusedError:
-                    print('PLC Connection refused')
+                    print('Error: PLC Connection refused')
 
-                ID_PIECE = plc_data.split(',')[1]
+                ID_PIECE = plc_data.split(',')[2]
+                ID_WORKLOAD = plc_data.split(',')[2]
 
-                print(plc_data)
-                print('Difetti trovati -> ', s)
+                print('Message from PLC:',plc_data)
+                DIFECTS_FOUNDED = s
+                print('Defects founded: ', DIFECTS_FOUNDED)
 
                 # save the processed images
                 FILEPATH_ORIGINAL, FRAGMENT_ID = save_image(im_save, ID_PIECE, directory = DIRECTORY_ORIGINAL_IMAGES, ext = '.png')
-                
-                # POST original images
-                #original_image_data = {'filepath': FILEPATH_ORIGINAL,'piece_id': ID_PIECE,'fragment_id':FRAGMENT_ID}
-                #requests.post(URL_INTERFACE, json = original_image_data)         
                 FILEPATH_PROCESSED, FRAGMENT_ID = save_image(im0, ID_PIECE, directory = DIRECTORY_PROCESSED_IMAGES, ext = '.png')
-                
-                # POST processed images
-                #DIFECTS_FOUND = s
-                #processed_image_data = {'filepath': FILEPATH_PROCESSED,'piece_id': id_pezzo,'fragment_id':FRAGMENT_ID,'defects':DIFECTS_FOUND}
-                #requests.post(URL_INTERFACE, json = processed_image_data)
+
+                # POST original images
+                POST_ARCHITECTURE = {'originale': {'path': FILEPATH_ORIGINAL,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID },
+                'elaborata':  {'path': FILEPATH_PROCESSED,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID,'numero_difetti_trovati' : DIFECTS_FOUNDED}}
+
+                callback = requests.post(URL_INTERFACE, json = POST_ARCHITECTURE)
+                #print(callback.status_code)
+                #print(callback.json())
 
                 # reset plc_data
                 plc_data = ''

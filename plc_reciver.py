@@ -7,16 +7,14 @@ from datetime import datetime
 from colorama import Fore, Style
 from app_config import PLC_IP, PLC_PORT
 
-'''
-SIMULATORE socket di PLC
-socket ad utilizzo di test come sostituto al PLC.    
-'''
 def save_message(message='test',directory='messages.txt'):   
     with open(directory, '+a') as f:       
         f.writelines(message + '\n')
 
 if __name__ == "__main__":
-
+    '''
+    PLC socket simulator socket for test use as a substitute for the PLC.
+    '''
     serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     serv.bind((PLC_IP, PLC_PORT))
     serv.listen(1)
