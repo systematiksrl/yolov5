@@ -24,7 +24,7 @@ Application for the detection and classification of defects on industrial leathe
 1. `python3.10.exe .\plc_sender.py`
 2. `python3.10.exe .\server.py`
 3. `python3.10.exe .\detect.py --weights .\best.pt --source 0`
-4. `python3.10.exe .\plc_reciver.py`
+4. `python3.10.exe .\plc_reciver.py` OR `python3.10.exe .\plc_vizualizer.py`
 
 <br>
 
@@ -50,7 +50,8 @@ send the detection result via socket <br>
 4. `plc_server.py` <br>
 Socket server that simulates PLC for the arrival of messages from detect.py
 
-
+4 `plc_visualizer.py` visualize the defect control ligth bulb.
+Its green when defects are not found, its red and emit a sound when the defects are present.
 <br>
 
 
