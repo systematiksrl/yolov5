@@ -50,7 +50,7 @@ send the detection result via socket <br>
 4. `plc_server.py` <br>
 Socket server that simulates PLC for the arrival of messages from detect.py
 
-4 `plc_visualizer.py` visualize the defect control ligth bulb.
+5. `plc_visualizer.py` visualize the defect control ligth bulb.
 Its green when defects are not found, its red and emit a sound when the defects are present.
 <br>
 
