@@ -5,10 +5,21 @@ from datetime import datetime
 from app_config import SERVER_IP, SERVER_PORT, FILEPATH_PLC_MESSAGES
 
 def save_message(message='test',directory='messages.txt'):   
+    """
+    append the message to the text file indicated as 
+    Path in the directory variable
+    """
     with open(directory, '+a') as f:       
         f.writelines(message + '\n')
 
 def main():
+    """
+    connect to IPv4 socket as a data stream
+    if I receive data from the socket and
+    if there is an 'f' inside this data,
+    then I have to save the message that
+    acts as a photo processing and saving command for the AI
+    """
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     mySocket.bind((SERVER_IP, SERVER_PORT))
     payload = None

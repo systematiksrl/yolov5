@@ -4,17 +4,6 @@ from random import randint
 from playsound import playsound  
 from app_config import difect_types
 
-master = Tk()
-lab = Label(master)
-lab.pack()
-
-canvas = tk.Canvas(master, width=450, height=300, bg="white")
-
-red_shape = canvas.create_oval(10, 10, 110, 110, fill="white")
-green_shape = canvas.create_oval(120, 10, 220, 110, fill="white")
-canvas.pack()
-
-
 def get_plc_message(directory = 'messages.txt'):
     '''
     read messages written by server.py
@@ -34,6 +23,11 @@ def get_plc_message(directory = 'messages.txt'):
     return first_line
 
 def update():
+    '''
+    graphically shows the message received by the AI server.
+    If there is a message containing defects, then start music and color the bulb red.
+    Otherwise leave it silent and green.
+    '''
     TEXT_MESSAGE = get_plc_message('defects_founded.txt')
     lab['text'] =  'PLC MESSAGE - ' + TEXT_MESSAGE
     master.after(3000, update) # run itself again after 1000 ms
@@ -53,5 +47,14 @@ def update():
         canvas.itemconfig(red_shape, fill="white")
 
 if __name__ == "__main__":
+    master = Tk()
+    lab = Label(master)
+    lab.pack()
+
+    canvas = tk.Canvas(master, width=450, height=300, bg="white")
+
+    red_shape = canvas.create_oval(10, 10, 110, 110, fill="white")
+    green_shape = canvas.create_oval(120, 10, 220, 110, fill="white")
+    canvas.pack()
     update()
     master.mainloop()

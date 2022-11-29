@@ -11,6 +11,8 @@ from app_config import SERVER_IP, SERVER_PORT
 def PLC_sender():
     '''
     PLC socket simulator socket for test use as a substitute for the PLC.
+    Generate a random message initializes a socket client that sends the message. 
+    Wait for a random time.
     '''
     while True: 
         
@@ -32,8 +34,8 @@ def PLC_sender():
 
         print('\n\n\t Status socket: '+Fore.GREEN +'\t\t[ONLINE]\n'+ Style.RESET_ALL+'\n\t IP server: \t\t\t'+Fore.YELLOW + SERVER_IP+ ':'+str(SERVER_PORT)+Style.RESET_ALL+'\n\n\t message from PLC: \t\t' + Fore.BLUE  +str(MESSAGE)  + Style.RESET_ALL + '\n\n\t time: \t\t\t\t'+  Fore.YELLOW  +str(current_time) + Style.RESET_ALL)
         
-        #time.sleep(rnd.randint(minimo_intervallo_di_secondi, massimo_intervallo_di_secondi+1))
-        time.sleep( 5 )
+        time.sleep(rnd.randint(minimo_intervallo_di_secondi, massimo_intervallo_di_secondi+1))
+        #time.sleep( 5 )
 
 if __name__ == "__main__":
     PLC_sender()

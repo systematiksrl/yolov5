@@ -1,9 +1,12 @@
 import os, shutil, random
 
-# 1. put all the images.png with their tags.txt in the data/obj / folder
-# 2. creates subfolders that data/labels/ and data/images/ where randomly splits the samples
-# 3. described with a split_percentage variable
-# 4. preparing the folder structure
+""" 
+    Split_data algorithm
+1. put all the images.png with their tags.txt in the data/obj / folder
+2. creates subfolders that data/labels/ and data/images/ where randomly splits the samples
+3. described with a split_percentage variable
+4. preparing the folder structure
+"""
 
 full_data_path = 'data/obj/'
 extension_allowed = '.png'
