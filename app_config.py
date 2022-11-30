@@ -15,8 +15,13 @@ URL_INTERFACE = 'http://192.168.1.7:8181/api/update'
 DIRECTORY_ORIGINAL_IMAGES = ROOT_PATH + f'{div}originale{div}'
 DIRECTORY_PROCESSED_IMAGES = ROOT_PATH + f'{div}processati{div}' 
 
-# DIRECTORY_ORIGINAL_IMAGES = '/home/user/documents/yolov5/originals/'
-# DIRECTORY_PROCESSED_IMAGES ='/home/user/documents/yolov5/processed/'
+# LINUX
+# DIRECTORY_ORIGINAL_IMAGES = '/home/user/photo/originals/'
+# DIRECTORY_PROCESSED_IMAGES ='/home/user/photo/processed/'
+
+# WINDOWS
+# DIRECTORY_ORIGINAL_IMAGES = 'C:\Windows\photo\originals\'
+# DIRECTORY_PROCESSED_IMAGES ='C:\Windows\photo\processed\'
 
 FILEPATH_PLC_MESSAGES = ROOT_PATH + f'{div}messages_from_plc.txt'
 watchDirectory = DIRECTORY_ORIGINAL_IMAGES
