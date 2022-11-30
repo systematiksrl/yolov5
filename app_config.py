@@ -13,7 +13,11 @@ ROOT_PATH = sys.path[0]
 URL_INTERFACE = 'http://192.168.1.7:8181/api/update'
 
 DIRECTORY_ORIGINAL_IMAGES = ROOT_PATH + f'{div}originale{div}'
-DIRECTORY_PROCESSED_IMAGES = ROOT_PATH + f'{div}processati{div}'
+DIRECTORY_PROCESSED_IMAGES = ROOT_PATH + f'{div}processati{div}' 
+
+# DIRECTORY_ORIGINAL_IMAGES = '/home/user/documents/yolov5/originals/'
+# DIRECTORY_PROCESSED_IMAGES ='/home/user/documents/yolov5/processed/'
+
 FILEPATH_PLC_MESSAGES = ROOT_PATH + f'{div}messages_from_plc.txt'
 watchDirectory = DIRECTORY_ORIGINAL_IMAGES
 SERVER_IP = socket.gethostname()

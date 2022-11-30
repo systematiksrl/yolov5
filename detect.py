@@ -281,25 +281,25 @@ def run(
                 DIFECTS_FOUNDED = s
                 print('Defects founded: ', DIFECTS_FOUNDED)
 
-                # save the processed images
+                # SAVE the originals and the processed images
                 FILEPATH_ORIGINAL, FRAGMENT_ID = save_image(im_save, ID_PIECE, directory = DIRECTORY_ORIGINAL_IMAGES, ext = '.png')
                 FILEPATH_PROCESSED, FRAGMENT_ID = save_image(im0, ID_PIECE, directory = DIRECTORY_PROCESSED_IMAGES, ext = '.png')
 
-                # POST original images
-                POST_ARCHITECTURE = {'originale': {'path': FILEPATH_ORIGINAL,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID },
+                # POST the original images
+                POST_DATA_STRUCTURE = {'originale': {'path': FILEPATH_ORIGINAL,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID },
                 'elaborata':  {'path': FILEPATH_PROCESSED,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID,'numero_difetti_trovati' : DIFECTS_FOUNDED}}
 
-                callback = requests.post(URL_INTERFACE, json = POST_ARCHITECTURE)
-                #print(callback.status_code)
-                #print(callback.json())
+                callback = requests.post(URL_INTERFACE, json = POST_DATA_STRUCTURE)
+                # print(callback.status_code)  # check the status
+                # print(callback.json())       # check the payload
 
                 # reset plc_data
                 plc_data = ''
             
-        # Print time (inference-only)
+        # print out the time required for the interference and the possible defects founded
         # LOGGER.info(f' {t3 - t2:.3f}s  difetti {s}')
 
-    # Print results
+    # print the results
     t = tuple(x / seen * 1E3 for x in dt)  # speeds per image
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
     if save_txt or save_img:
@@ -310,7 +310,6 @@ def run(
 
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--id_pezzo', nargs='+', type=str, default='1', help='testa la ID del pezzo correttamente dandogliela a linea di comando')
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'yolov5s.pt', help='model path(s)')
     parser.add_argument('--source', type=str, default=ROOT / 'data/images', help='file/ help=(optional) dataset.yaml path')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')

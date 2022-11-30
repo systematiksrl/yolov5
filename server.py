@@ -39,7 +39,8 @@ def main():
         
         except KeyboardInterrupt:
             print("press control-c again to quit")
+            time.sleep(1)
             exit()
-            
+
 if __name__ == '__main__':
     main()
