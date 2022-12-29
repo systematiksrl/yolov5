@@ -32,10 +32,16 @@ def PLC_sender():
         elif platform == "win32":
             os.system('cls')
 
+        print('\n\n\t '+Fore.RED +'PLC SENDER SIMULATOR'+ Style.RESET_ALL)
         print('\n\n\t Status socket: '+Fore.GREEN +'\t\t[ONLINE]\n'+ Style.RESET_ALL+'\n\t IP server: \t\t\t'+Fore.YELLOW + SERVER_IP+ ':'+str(SERVER_PORT)+Style.RESET_ALL+'\n\n\t message from PLC: \t\t' + Fore.BLUE  +str(MESSAGE)  + Style.RESET_ALL + '\n\n\t time: \t\t\t\t'+  Fore.YELLOW  +str(current_time) + Style.RESET_ALL)
         
+<<<<<<< Updated upstream
         time.sleep(rnd.randint(minimo_intervallo_di_secondi, massimo_intervallo_di_secondi+1))
         #time.sleep( 5 )
+=======
+        #time.sleep(rnd.randint(minimo_intervallo_di_secondi, massimo_intervallo_di_secondi+1))
+        time.sleep( 15 )
+>>>>>>> Stashed changes
 
 if __name__ == "__main__":
     PLC_sender()

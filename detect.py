@@ -30,6 +30,7 @@ import platform
 import sys
 from pathlib import Path
 import requests
+from colorama import Fore, Style
 
 import torch
 import torch.backends.cudnn as cudnn
@@ -98,7 +99,7 @@ def save_image(image, id, directory = 'images' , ext = '.png'):
     is_written = cv2.imwrite(image_path, image)
 
     if is_written:
-        print('New image: ' + image_path+'\n')
+        print('\n\tnew image: ' + Fore.YELLOW  + image_path + Style.RESET_ALL)
     
     return image_path, counter
 
@@ -277,11 +278,28 @@ def run(
                 ID_PIECE = plc_data.split(',')[2]
                 ID_WORKLOAD = plc_data.split(',')[2]
 
-                print('Message from PLC:',plc_data)
-                DIFECTS_FOUNDED = s
-                print('Defects founded: ', DIFECTS_FOUNDED)
+                if platform == "linux" or platform == "linux2":
+                    os.system('clear')
+                elif platform == "win32":
+                    os.system('cls')
 
+                current_time = datetime.now().strftime("%H:%M:%S")
+
+                print('\n\n\t '+Fore.RED +'AI DEFECT DETECTOR'+ Style.RESET_ALL)
+                print('\n\n\tStatus socket: '+Fore.GREEN +'\t\t\t[ONLINE]\n'+ Style.RESET_ALL)
+
+                print('\n\tCurrent Time: \t\t\t'+Fore.YELLOW  +str(current_time) + Style.RESET_ALL)
+
+                print('\n\tMessage from PLC:\t\t'+Fore.BLUE + plc_data + Style.RESET_ALL)
+                DIFECTS_FOUNDED = s
+                print('\n\tDefects founded:\t\t'+Fore.RED + DIFECTS_FOUNDED+ Style.RESET_ALL)
+
+<<<<<<< Updated upstream
                 # SAVE the originals and the processed images
+=======
+                # save the processed images
+                print('\n\tsaving images...')
+>>>>>>> Stashed changes
                 FILEPATH_ORIGINAL, FRAGMENT_ID = save_image(im_save, ID_PIECE, directory = DIRECTORY_ORIGINAL_IMAGES, ext = '.png')
                 FILEPATH_PROCESSED, FRAGMENT_ID = save_image(im0, ID_PIECE, directory = DIRECTORY_PROCESSED_IMAGES, ext = '.png')
 
@@ -289,9 +307,20 @@ def run(
                 POST_DATA_STRUCTURE = {'originale': {'path': FILEPATH_ORIGINAL,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID },
                 'elaborata':  {'path': FILEPATH_PROCESSED,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID,'numero_difetti_trovati' : DIFECTS_FOUNDED}}
 
+<<<<<<< Updated upstream
                 callback = requests.post(URL_INTERFACE, json = POST_DATA_STRUCTURE)
                 # print(callback.status_code)  # check the status
                 # print(callback.json())       # check the payload
+=======
+                #try:
+                #   callback = requests.post(URL_INTERFACE, json = POST_ARCHITECTURE)
+                   #print(callback.status_code)
+                   #print(callback.json())
+
+                #except ConnectionRefusedError:
+                #except:
+                #    print('refused connection from panel')
+>>>>>>> Stashed changes
 
                 # reset plc_data
                 plc_data = ''

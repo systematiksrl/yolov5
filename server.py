@@ -1,8 +1,9 @@
 import os
 import socket
 import time
+from colorama import Fore, Style
 from datetime import datetime
-from app_config import SERVER_IP, SERVER_PORT, FILEPATH_PLC_MESSAGES
+from app_config import SERVER_IP, SERVER_PORT, FILEPATH_PLC_MESSAGES,platform
 
 def save_message(message='test',directory='messages.txt'):   
     """
@@ -32,7 +33,17 @@ def main():
 
             if 'f' in str(payload)[2]:
                 #id_pezzo = str(payload).split(',')[1]
-                print(f'nuovo messaggio : {payload} ')
+                if platform == "linux" or platform == "linux2":
+                    os.system('clear')
+                elif platform == "win32":
+                    os.system('cls')
+            
+                current_time = datetime.now().strftime("%H:%M:%S")
+                print('\n\n\t '+Fore.RED +'SERVER message handler'+ Style.RESET_ALL)
+
+                print('\n\t Status server: \t\t'+Fore.GREEN +'[ONLINE]'+ Style.RESET_ALL)
+                print('\n\t Current Time: \t\t\t'+Fore.YELLOW  +str(current_time) + Style.RESET_ALL)
+                print('\n\t New message from PLC: \t\t'+Fore.BLUE +str(payload) + Style.RESET_ALL )
                 save_message( message = payload.decode() , directory = FILEPATH_PLC_MESSAGES)
             
             payload = None
