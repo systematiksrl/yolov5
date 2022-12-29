@@ -1,0 +1,64 @@
+from playsound import playsound  
+from app_config import difect_types
+import tkinter as tk
+from tkinter import *
+
+def get_plc_message(directory = 'messages.txt'):
+    '''
+    read messages written by server.py
+    which reads the messages from the PLC and saves them.
+    this law functions the file, if data is present,
+    takes the first line (First In First Out rule)
+    and causes it in order to save the id of the piece.
+    '''
+    with open(directory, '+r') as f:
+        first_line = f.readline()
+        lines = f.readlines()
+
+    with open(directory, '+w') as f:       
+        if lines[1:]:
+            f.writelines(lines)
+    
+    return first_line
+
+def update():
+    '''
+    graphically shows the message received by the AI server.
+    If there is a message containing defects, then start music and color the bulb red.
+    Otherwise leave it silent and green.
+    '''
+    TEXT_MESSAGE = get_plc_message('defects_founded.txt')
+    lab['text'] =  'PLC MESSAGE - ' + TEXT_MESSAGE
+    master.after(3000, update) # run itself again after 1000 ms
+    
+    have_defects = False
+    for difect_type in difect_types:
+        if difect_type in TEXT_MESSAGE:
+            have_defects = True
+
+    if have_defects:
+        canvas.itemconfig(red_shape, fill="red")
+        canvas.itemconfig(green_shape, fill="white")
+        playsound(".\documents\music\music2.wav")
+
+    else:
+        canvas.itemconfig(green_shape, fill="green")
+        canvas.itemconfig(red_shape, fill="white")
+
+if __name__ == "__main__":
+    master = tk.Tk()
+    lab = Label(master)
+    lab.pack()
+
+    canvas = tk.Canvas(master, width=100, height=50, bg="black")
+
+    red_shape = canvas.create_oval(10, 10, 110, 110, fill="black")
+    green_shape = canvas.create_oval(120, 10, 220, 110, fill="black")
+
+    canvas = tk.Canvas(master, width=450, height=300, bg="black")
+
+    red_shape = canvas.create_oval(10, 10, 110, 110, fill="black")
+    green_shape = canvas.create_oval(120, 10, 220, 110, fill="black")
+    canvas.pack()
+    update()
+    master.mainloop()
