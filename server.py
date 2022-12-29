@@ -43,7 +43,7 @@ def main():
 
                 print('\n\t Status server: \t\t'+Fore.GREEN +'[ONLINE]'+ Style.RESET_ALL)
                 print('\n\t Current Time: \t\t\t'+Fore.YELLOW  +str(current_time) + Style.RESET_ALL)
-                print('\n\t New message from PLC: \t\t'+Fore.BLUE +str(payload) + Style.RESET_ALL )
+                print('\n\t New message from PLC: \t\t'+Fore.CYAN +str(payload) + Style.RESET_ALL )
                 save_message( message = payload.decode() , directory = FILEPATH_PLC_MESSAGES)
             
             payload = None

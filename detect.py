@@ -31,7 +31,6 @@ import sys
 from pathlib import Path
 import requests
 from colorama import Fore, Style
-
 import torch
 import torch.backends.cudnn as cudnn
 
@@ -57,6 +56,7 @@ from app_config import DIRECTORY_ORIGINAL_IMAGES,DIRECTORY_PROCESSED_IMAGES, FIL
 from app_config import PLC_IP, PLC_PORT
 from app_config import div
 from app_config import URL_INTERFACE
+from app_config import VISUALIZE_DETECTION
 
 
 def get_plc_message(directory = 'messages.txt'):
@@ -154,7 +154,8 @@ def run(
 
     # Dataloader
     if webcam:
-        view_img = check_imshow()
+        #view_img = check_imshow()
+        view_img = VISUALIZE_DETECTION
         cudnn.benchmark = True  # set True to speed up constant image size inference
         dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
         bs = len(dataset)  # batch_size
@@ -273,24 +274,24 @@ def run(
                         sock.send(bytes( plc_data + ' - ' + defects, "utf-8"))
 
                 except ConnectionRefusedError:
-                    print('Error: PLC Connection refused')
+                    print('Error: connection refused from the PLC server')
 
                 ID_PIECE = plc_data.split(',')[2]
                 ID_WORKLOAD = plc_data.split(',')[2]
 
-                if platform == "linux" or platform == "linux2":
+                if platform.system() == 'Linux' and p not in windows:
                     os.system('clear')
-                elif platform == "win32":
+                else:
                     os.system('cls')
 
                 current_time = datetime.now().strftime("%H:%M:%S")
 
-                print('\n\n\t '+Fore.RED +'AI DEFECT DETECTOR'+ Style.RESET_ALL)
+                print('\n\n\t '+Fore.RED +'AI Defects Detector'+ Style.RESET_ALL)
                 print('\n\n\tStatus socket: '+Fore.GREEN +'\t\t\t[ONLINE]\n'+ Style.RESET_ALL)
 
                 print('\n\tCurrent Time: \t\t\t'+Fore.YELLOW  +str(current_time) + Style.RESET_ALL)
 
-                print('\n\tMessage from PLC:\t\t'+Fore.BLUE + plc_data + Style.RESET_ALL)
+                print('\n\tMessage from PLC:\t\t'+Fore.CYAN + plc_data + Style.RESET_ALL)
                 DIFECTS_FOUNDED = s
                 print('\n\tDefects founded:\t\t'+Fore.RED + DIFECTS_FOUNDED+ Style.RESET_ALL)
 
@@ -306,14 +307,10 @@ def run(
 
 
                 # Publish data to the panel
-                callback = requests.post(URL_INTERFACE, json = POST_DATA_STRUCTURE)
-                # print(callback.status_code)  # check the status
-                # print(callback.json())       # check the payload
-
                 #try:
-                #   callback = requests.post(URL_INTERFACE, json = POST_ARCHITECTURE)
-                   #print(callback.status_code)
-                   #print(callback.json())
+                    # callback = requests.post(URL_INTERFACE, json = POST_ARCHITECTURE)
+                    # print(callback.status_code)  # check the status
+                    # print(callback.json())       # check the payload
 
                 #except ConnectionRefusedError as e:
                 #    print(f'refused connection from panel {e}')
@@ -342,7 +339,7 @@ def parse_opt():
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
     parser.add_argument('--max-det', type=int, default=1000, help='maximum detections per image')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument('--view-img', action='store_true', help='show results')
+    parser.add_argument('--view-img',default=False,  help='show results')
     parser.add_argument('--save-txt', action='store_true', help='save results to *.txt')
     parser.add_argument('--save-conf', action='store_true', help='save confidences in --save-txt labels')
     parser.add_argument('--save-crop', action='store_true', help='save cropped prediction boxes')

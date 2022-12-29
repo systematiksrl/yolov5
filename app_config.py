@@ -1,6 +1,7 @@
 import socket
 import sys
 from sys import platform
+
 if platform == "linux" or platform == "linux2":
         div = '/'
 elif platform == "win32":
@@ -12,6 +13,7 @@ difect_types = ['foro', 'goccia']
 ROOT_PATH = sys.path[0]
 URL_INTERFACE = 'http://192.168.1.7:8181/api/update'
 
+VISUALIZE_DETECTION = False
 DIRECTORY_ORIGINAL_IMAGES = ROOT_PATH + f'{div}originale{div}'
 DIRECTORY_PROCESSED_IMAGES = ROOT_PATH + f'{div}processati{div}' 
 
