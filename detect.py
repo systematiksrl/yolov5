@@ -294,12 +294,9 @@ def run(
                 DIFECTS_FOUNDED = s
                 print('\n\tDefects founded:\t\t'+Fore.RED + DIFECTS_FOUNDED+ Style.RESET_ALL)
 
-<<<<<<< Updated upstream
                 # SAVE the originals and the processed images
-=======
                 # save the processed images
-                print('\n\tsaving images...')
->>>>>>> Stashed changes
+
                 FILEPATH_ORIGINAL, FRAGMENT_ID = save_image(im_save, ID_PIECE, directory = DIRECTORY_ORIGINAL_IMAGES, ext = '.png')
                 FILEPATH_PROCESSED, FRAGMENT_ID = save_image(im0, ID_PIECE, directory = DIRECTORY_PROCESSED_IMAGES, ext = '.png')
 
@@ -307,20 +304,19 @@ def run(
                 POST_DATA_STRUCTURE = {'originale': {'path': FILEPATH_ORIGINAL,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID },
                 'elaborata':  {'path': FILEPATH_PROCESSED,'id_lavorazione':ID_WORKLOAD, 'id_pelle':ID_PIECE ,'numero_frammento_pelle':FRAGMENT_ID,'numero_difetti_trovati' : DIFECTS_FOUNDED}}
 
-<<<<<<< Updated upstream
+
+                # Publish data to the panel
                 callback = requests.post(URL_INTERFACE, json = POST_DATA_STRUCTURE)
                 # print(callback.status_code)  # check the status
                 # print(callback.json())       # check the payload
-=======
+
                 #try:
                 #   callback = requests.post(URL_INTERFACE, json = POST_ARCHITECTURE)
                    #print(callback.status_code)
                    #print(callback.json())
 
-                #except ConnectionRefusedError:
-                #except:
-                #    print('refused connection from panel')
->>>>>>> Stashed changes
+                #except ConnectionRefusedError as e:
+                #    print(f'refused connection from panel {e}')
 
                 # reset plc_data
                 plc_data = ''
